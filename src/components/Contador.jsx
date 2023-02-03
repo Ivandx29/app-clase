@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import * as eva from '@eva-design/eva';
-import { View, StyleSheet } from 'react-native';
+import { View, StyleSheet, Image } from 'react-native';
 import { ApplicationProvider, Modal, Card, Layout, Text, Button } from '@ui-kitten/components';
 import PersonService from '../service/PersonService'
 
@@ -19,11 +19,6 @@ const Contador = () => {
         setCounter(counter - 1);
     }
 
-    useEffect(() => {
-        obtenerPersona();
-
-    }, [])
-
     const obtenerPersona = () => {
         personService.obtenerPersonas().then((response) => {
             setPersona(response.results[0])
@@ -31,6 +26,19 @@ const Contador = () => {
     }
 
 
+    const styles = StyleSheet.create({
+        container: {
+            paddingTop: 50,
+        },
+        tinyLogo: {
+            width: 50,
+            height: 50,
+        },
+        logo: {
+            width: 100,
+            height: 100,
+        },
+    });
 
     return (
         <Layout style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
@@ -43,10 +51,15 @@ const Contador = () => {
                 <Button onPress={() => { setIsVisible(true); obtenerPersona(); }}> Ver Persona </Button>
                 <Modal visible={isVisible}>
                     <Card >
-                        <Text>Nombre de Sujeto : {persona.name.first}</Text>
-                        <Text>Edad del Sujeto : {persona.dob.age}</Text>
+                        <Image
+                            style={styles.logo}
+                            source={{ uri: `${persona?.picture?.medium}` }}
+                        />
+                        <Text>Nombre de Sujeto : {persona?.name?.first}</Text>
+                        <Text>Edad del Sujeto : {persona?.dob?.age}</Text>
+                        <Text>Email del Sujeto : {persona?.email}</Text>
                         <Button onPress={() => setIsVisible(false)}>
-                            DISMISS
+                            Cerrar
                         </Button>
                     </Card>
                 </Modal>
@@ -54,5 +67,6 @@ const Contador = () => {
         </Layout>
     )
 };
+
 
 export default Contador;
